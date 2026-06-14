@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>dream-socia - Login</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      color: white;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      padding: 20px;
+    }
+   .card {
+      background: rgba(255,255,255,0.05);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      padding: 40px 30px;
+      width: 100%;
+      max-width: 380px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+    h2 { text-align: center; margin-bottom: 30px; font-size: 24px; }
+    input {
+      width: 100%;
+      padding: 14px;
+      margin-bottom: 15px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.2);
+      background: rgba(255,255,255,0.05);
+      color: white;
+      font-size: 16px;
+      outline: none;
+    }
+    input:focus { border-color: #25D366; }
+    button {
+      width: 100%;
+      padding: 14px;
+      background: #25D366;
+      border: none;
+      border-radius: 10px;
+      color: white;
+      font-weight: 600;
+      font-size: 16px;
+      cursor: pointer;
+      margin-bottom: 15px;
+      transition: transform 0.2s;
+    }
+    button:active { transform: scale(0.98); }
+   .switch {
+      text-align: center;
+      font-size: 14px;
+      margin-top: 10px;
+      cursor: pointer;
+      color: #00BFFF;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2 id="title">Login to dream-socia</h2>
+    <input type="email" id="email" placeholder="Email" autocomplete="email">
+    <input type="password" id="password" placeholder="Password" autocomplete="current-password">
+    <button onclick="handleAuth()">Login</button>
+    <div class="switch" onclick="toggleMode()">No account? Sign up</div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+    // PASTE YOUR 3 FIREBASE KEYS HERE - REPLACE THE 3 LINES BELOW
+     // Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyBI4OriQGABMLaut_J5ugDkRjlbjHPTQu8",
+  authDomain: "dream-socia.firebaseapp.com",
+  projectId: "dream-socia",
+  storageBucket: "dream-socia.firebasestorage.app",
+  messagingSenderId: "416227568364",
+  appId: "1:416227568364:web:9cbb28a9c0a068f88d53c9",
+  measurementId: "G-JL1MZRWSJE"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    let isLogin = true;
+
+    window.toggleMode = () => {
+      isLogin =!isLogin;
+      document.getElementById('title').innerText = isLogin? 'Login to dream-socia' : 'Join dream-socia';
+      document.querySelector('button').innerText = isLogin? 'Login' : 'Sign Up';
+      document.querySelector('.switch').innerText = isLogin? 'No account? Sign up' : 'Have account? Login';
+    }
+
+    window.handleAuth = async () => {
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value.trim();
+
+      if(!email ||!password) {
+        alert('Fill email + password brr');
+        return;
+      }
+
+      try {
+        if(isLogin) {
+          await signInWithEmailAndPassword(auth, email, password);
+        } else {
+          await createUserWithEmailAndPassword(auth, email, password);
+        }
+        window.location.href = 'feed.html';
+      } catch(e) {
+        alert(e.message);
+      }
+    }
+  </script>
+</body>
+</html>
