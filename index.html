@@ -5,65 +5,50 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login - Dream Socia</title>
   <style>
-    body { font-family: Arial; display: flex; justify-content: center; align-items: center; height: 100vh; background: #f0f2f5; }
-    .card { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); width: 300px; }
-    input { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px; }
-    button { width: 100%; padding: 10px; background: #1877f2; color: white; border: none; border-radius: 5px; cursor: pointer; }
-    .switch { text-align: center; margin-top: 15px; color: #1877f2; cursor: pointer; }
+    body { font-family: -apple-system, Arial; display: flex; justify-content: center; align-items: center; height: 100vh; background: #f0f2f5; margin: 0; }
+    .card { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); width: 320px; }
+    h2 { text-align: center; margin-bottom: 20px; color: #1877f2; }
+    input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; }
+    button { width: 100%; padding: 12px; background: #1877f2; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; margin-top: 10px; }
+    button:disabled { background: #ccc; cursor: not-allowed; }
+    .switch { text-align: center; margin-top: 15px; color: #1877f2; cursor: pointer; font-size: 14px; }
+    .error { color: red; font-size: 13px; text-align: center; margin-top: 10px; display: none; }
   </style>
 </head>
 <body>
   <div class="card">
-    <h2 id="title">Login to dream-socia</h2>
-    <input type="email" id="email" placeholder="Email" autocomplete="email">
-    <input type="password" id="password" placeholder="Password">
-    <button onclick="handleAuth()">Login</button>
+    <h2 id="title">Login to Dream Socia</h2>
+    <input type="email" id="email" placeholder="Email" autocomplete="email" required>
+    <input type="password" id="password" placeholder="Password" autocomplete="current-password" required>
+    <button id="authBtn" onclick="handleAuth()">Login</button>
+    <div id="errorBox" class="error"></div>
     <div class="switch" onclick="toggleMode()">No account? Sign up</div>
   </div>
 
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
+    // Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
 
-    // 🔑 PASTE YOUR NEW RESTRICTED API KEY HERE brr
-    const firebaseConfig = {
-      apiKey: "
-AIzaSyC9t7F4CWfi3JiXowV3eJCl6A_MEY88TVA
-",
-      authDomain: "dream-socia.firebaseapp.com",
-      projectId: "dream-socia",
-      storageBucket: "dream-socia.firebasestorage.app",
-      messagingSenderId: "416227568364",
-      appId: "1:416227568364:web:9cbb28a9c0a068f88d53c9"
-    };
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "
+AIzaSyC9t7F4CWfi3JiXowV3eJCl6A_MEY88TVA",
+  authDomain: "dream-socia.firebaseapp.com",
+  projectId: "dream-socia",
+  storageBucket: "dream-socia.firebasestorage.app",
+  messagingSenderId: "416227568364",
+  appId: "1:416227568364:web:9cbb28a9c0a068f88d53c9",
+  measurementId: "G-JL1MZRWSJE"
+};
 
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
 
-    let isLoginMode = true;
-
-    window.handleAuth = async () => {
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
-      
-      try {
-        if (isLoginMode) {
-          await signInWithEmailAndPassword(auth, email, password);
-        } else {
-          await createUserWithEmailAndPassword(auth, email, password);
-        }
-        window.location.href = "feed.html";
-      } catch (error) {
-        alert(error.message);
-      }
-    }
-
-    window.toggleMode = () => {
-      isLoginMode = !isLoginMode;
-      document.getElementById("title").innerText = isLoginMode ? "Login to dream-socia" : "Sign up for dream-socia";
-      document.querySelector("button").innerText = isLoginMode ? "Login" : "Sign up";
-      document.querySelector(".switch").innerText = isLoginMode ? "No account? Sign up" : "Have account? Login";
-    }
-  </script>
-</body>
-</html>
+    let isLoginMode
